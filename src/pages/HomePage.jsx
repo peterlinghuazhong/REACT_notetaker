@@ -18,7 +18,7 @@ import Grid from "@mui/material/Grid";
 import CreateIcon from "@mui/icons-material/Create";
 import DeleteIcon from "@mui/icons-material/Delete";
 import AddCircleRoundedIcon from "@mui/icons-material/AddCircleRounded";
-const bull = (
+const pages = (
   <Box
     component="span"
     sx={{ display: "inline-block", mx: "2px", transform: "scale(0.8)" }}
