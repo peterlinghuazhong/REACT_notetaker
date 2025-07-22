@@ -19,11 +19,6 @@ import CreateIcon from "@mui/icons-material/Create";
 import DeleteIcon from "@mui/icons-material/Delete";
 import AddCircleRoundedIcon from "@mui/icons-material/AddCircleRounded";
 
-<Box
-  component="span"
-  sx={{ display: "inline-block", mx: "2px", transform: "scale(0.8)" }}
-></Box>;
-
 function HomePage() {
   const [category, setCategory] = useState("");
   const [updated, setUpdated] = useState("");
@@ -32,6 +27,11 @@ function HomePage() {
   };
   return (
     <Container>
+      <Box
+        component="span"
+        sx={{ display: "inline-block", mx: "2px", transform: "scale(0.8)" }}
+      ></Box>
+      ;
       <div style={{ display: "flex", justifyContent: "space-between" }}>
         <Typography variant="h3" sx={{ py: "20px" }}>
           All Notes
