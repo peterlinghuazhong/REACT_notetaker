@@ -1,28 +1,25 @@
 import { BrowserRouter as Router, Routes, Route } from "react-router";
 import AppBar from "./components/AppBar";
-
-// import all the pages
 import HomePage from "./pages/HomePage";
-import AddNewPage from "./pages/AddNewPage";
 import CategoriesPage from "./pages/CategoriesPage";
-
-/*
-  Routes:
-  All notes => /
-  Add note => /add
-  Categories => /categories
-*/
+import AddNewPage from "./pages/AddNewPage";
+import EditNote from "./pages/EditNote";
+import { Toaster } from "sonner";
 
 function App() {
   return (
-    <Router>
-      <AppBar />
-      <Routes>
-        <Route path="/" element={<HomePage />} />
-        <Route path="/add" element={<AddNewPage />} />
-        <Route path="/categories" element={<CategoriesPage />} />
-      </Routes>
-    </Router>
+    <>
+      <Router>
+        <AppBar />
+        <Routes>
+          <Route path="/" element={<HomePage />} />
+          <Route path="/add" element={<AddNewPage />} />
+          <Route path="/categories" element={<CategoriesPage />} />
+          <Route path="/edit/:id" element={<EditNote />} />
+        </Routes>
+        <Toaster position="top-right" theme="dark" />
+      </Router>
+    </>
   );
 }
 

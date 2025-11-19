@@ -7,160 +7,158 @@ import {
   Select,
   MenuItem,
   IconButton,
+  Box,
+  Card,
+  CardActions,
+  CardContent,
+  Button,
+  Grid,
+  Chip,
 } from "@mui/material";
 import { Link as RouterLink } from "react-router";
-import Box from "@mui/material/Box";
-import Card from "@mui/material/Card";
-import CardActions from "@mui/material/CardActions";
-import CardContent from "@mui/material/CardContent";
-import Button from "@mui/material/Button";
-import Grid from "@mui/material/Grid";
 import CreateIcon from "@mui/icons-material/Create";
 import DeleteIcon from "@mui/icons-material/Delete";
 import AddCircleRoundedIcon from "@mui/icons-material/AddCircleRounded";
 
-function HomePage() {
-  const [category, setCategory] = useState("");
-  const [updated, setUpdated] = useState("");
-  const handleChange = (event) => {
-    setCategory(event.target.value);
+function NotesPage() {
+  const notesInStorage = localStorage.getItem("notes");
+  const [notes, setNotes] = useState(
+    notesInStorage ? JSON.parse(notesInStorage) : []
+  );
+
+  const categoriesInStorage = localStorage.getItem("categories");
+  const [categories] = useState(
+    categoriesInStorage ? JSON.parse(categoriesInStorage) : []
+  );
+
+  const getCategoryLabel = (note) => {
+    const selectedCategory = categories.find((c) => c.id === note.category);
+    if (selectedCategory) {
+      return selectedCategory.label;
+    }
   };
+
+  const [selectedCategory, setSelectedCategory] = useState("");
+  const [sortBy, setSortBy] = useState("updatedAt");
+
+  const handleSortChange = (event) => {
+    setSortBy(event.target.value);
+  };
+
+  const handleDelete = (note) => {
+    const confirmDelete = window.confirm("Are you sure you want to delete?");
+    if (confirmDelete) {
+      const updatedNotes = notes.filter((item) => item.id !== note.id);
+      setNotes(updatedNotes);
+      localStorage.setItem("notes", JSON.stringify(updatedNotes));
+    }
+  };
+
+  const filteredNotes = (
+    selectedCategory
+      ? notes.filter((note) => note.category === selectedCategory)
+      : notes
+  ).sort((a, b) => {
+    if (sortBy === "title") {
+      return a.title.localeCompare(b.title);
+    } else {
+      return new Date(b.updatedAt) - new Date(a.updatedAt);
+    }
+  });
+
   return (
     <Container>
       <Box
-        component="span"
-        sx={{ display: "inline-block", mx: "2px", transform: "scale(0.8)" }}
-      ></Box>
-      ;
-      <div style={{ display: "flex", justifyContent: "space-between" }}>
+        sx={{
+          display: "flex",
+          justifyContent: "space-between",
+          alignItems: "flex-end",
+          flexWrap: "wrap",
+          gap: 2,
+        }}
+      >
         <Typography variant="h3" sx={{ py: "20px" }}>
-          All Notes
+          All Notes ({notes.length})
         </Typography>
-        <div style={{ display: "flex" }}>
-          <FormControl sx={{ mt: "20px", minWidth: 160, paddingRight: "20px" }}>
-            <InputLabel id="note_category-label">All Categories</InputLabel>
+
+        <Box sx={{ display: "flex", gap: 2 }}>
+          <FormControl sx={{ minWidth: 200 }}>
+            <InputLabel id="filter-category-label">All Categories </InputLabel>
             <Select
-              labelId="note_category-label"
-              id="note_category"
+              labelId="filter-category-label"
+              id="filter-category"
               label="All Categories"
-              value={category}
-              onChange={handleChange}
-              autoWidth
+              value={selectedCategory}
+              onChange={(event) => {
+                setSelectedCategory(event.target.value);
+              }}
             >
               <MenuItem value="">All Categories</MenuItem>
-              <MenuItem value="Personal">Personal</MenuItem>
-              <MenuItem value="Work">Work</MenuItem>
-              <MenuItem value="Idea">Idea</MenuItem>
+              {categories.map((cat) => (
+                <MenuItem key={cat.id} value={cat.id}>
+                  {cat.label}
+                </MenuItem>
+              ))}
             </Select>
           </FormControl>
-          <FormControl sx={{ mt: "20px", minWidth: 160 }}>
-            <InputLabel id="note_category-label">Last Updated</InputLabel>
+
+          <FormControl sx={{ minWidth: 200 }}>
+            <InputLabel id="sort-label">Sort By</InputLabel>
             <Select
-              labelId="note_category-label"
-              id="note_category"
-              label="Last Updated"
-              value={updated}
-              onChange={handleChange}
-              autoWidth
+              labelId="sort-label"
+              id="sort"
+              value={sortBy}
+              label="Sort By"
+              onChange={handleSortChange}
             >
-              <MenuItem value="">Last Updated</MenuItem>
-              <MenuItem value="Title">Title</MenuItem>
+              <MenuItem value="updatedAt">Last Updated</MenuItem>
+              <MenuItem value="title">Title</MenuItem>
             </Select>
           </FormControl>
-        </div>
-      </div>
+        </Box>
+      </Box>
+
       <Grid container spacing={3}>
-        <Card sx={{ minWidth: 275 }}>
-          <CardContent>
-            <Typography variant="h5" component="div">
-              Which theme should we pick?
-            </Typography>
-            <Typography
-              autoWidth
-              sx={{
-                display: "inline-block",
-                bgcolor: "lightgrey",
-                p: "5px",
-                mb: 1.5,
-                borderRadius: "20px",
-                mt: "15px",
-              }}
-            >
-              adjective
-            </Typography>
-            <Typography variant="body2">TIME</Typography>
-          </CardContent>
-          <CardActions>
-            <Button size="small" component={RouterLink} to="/edit">
-              <CreateIcon /> EDIT
-            </Button>
-            <Button size="small" color="error">
-              <DeleteIcon />
-              DELETE
-            </Button>
-          </CardActions>
-        </Card>
-        <Card sx={{ minWidth: 275 }}>
-          <CardContent>
-            <Typography variant="h5" component="div">
-              Project making week
-            </Typography>
-            <Typography
-              autoWidth
-              sx={{
-                display: "inline-block",
-                bgcolor: "lightgrey",
-                p: "5px",
-                mb: 1.5,
-                borderRadius: "20px",
-                mt: "15px",
-              }}
-            >
-              Personal
-            </Typography>
-            <Typography variant="body2">TIME</Typography>
-          </CardContent>
-          <CardActions>
-            <Button size="small">
-              <CreateIcon /> EDIT
-            </Button>
-            <Button size="small" color="error">
-              <DeleteIcon />
-              DELETE
-            </Button>
-          </CardActions>
-        </Card>
-        <Card sx={{ minWidth: 275 }}>
-          <CardContent>
-            <Typography variant="h5" component="div">
-              Assignment Sheets
-            </Typography>
-            <Typography
-              autoWidth
-              sx={{
-                display: "inline-block",
-                bgcolor: "lightgrey",
-                p: "5px",
-                mb: 1.5,
-                borderRadius: "20px",
-                mt: "15px",
-              }}
-            >
-              work
-            </Typography>
-            <Typography variant="body2">TIME</Typography>
-          </CardContent>
-          <CardActions>
-            <Button size="small">
-              <CreateIcon /> EDIT
-            </Button>
-            <Button size="small" color="error">
-              <DeleteIcon />
-              DELETE
-            </Button>
-          </CardActions>
-        </Card>
+        {filteredNotes.map((note) => {
+          return (
+            <Grid item xs={12} sm={6} md={4} key={note.id}>
+              <Card sx={{ minHeight: 220 }}>
+                <CardContent>
+                  <Typography variant="h5" component="div">
+                    {note.title}
+                  </Typography>
+                  <Chip label={getCategoryLabel(note)} />
+
+                  <Typography variant="body2">
+                    {note.updatedAt
+                      ? new Date(note.updatedAt).toLocaleString()
+                      : "No date"}
+                  </Typography>
+                </CardContent>
+                <CardActions>
+                  <Button
+                    size="small"
+                    component={RouterLink}
+                    to={`/edit/${note.id}`}
+                  >
+                    <CreateIcon fontSize="small" sx={{ mr: 1 }} /> EDIT
+                  </Button>
+                  <Button
+                    size="small"
+                    color="error"
+                    onClick={() => handleDelete(note)}
+                  >
+                    <DeleteIcon fontSize="small" sx={{ mr: 1 }} />
+                    DELETE
+                  </Button>
+                </CardActions>
+              </Card>
+            </Grid>
+          );
+        })}
       </Grid>
+
+      {/* Floating Add Button */}
       <IconButton
         component={RouterLink}
         to="/add"
@@ -173,4 +171,5 @@ function HomePage() {
     </Container>
   );
 }
-export default HomePage;
+
+export default NotesPage;
