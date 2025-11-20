@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import { useState } from "react";
 import {
   Container,
   Typography,
@@ -33,9 +33,7 @@ function NotesPage() {
 
   const getCategoryLabel = (note) => {
     const selectedCategory = categories.find((c) => c.id === note.category);
-    if (selectedCategory) {
-      return selectedCategory.label;
-    }
+    return selectedCategory ? selectedCategory.label : "";
   };
 
   const [selectedCategory, setSelectedCategory] = useState("");
@@ -58,13 +56,11 @@ function NotesPage() {
     selectedCategory
       ? notes.filter((note) => note.category === selectedCategory)
       : notes
-  ).sort((a, b) => {
-    if (sortBy === "title") {
-      return a.title.localeCompare(b.title);
-    } else {
-      return new Date(b.updatedAt) - new Date(a.updatedAt);
-    }
-  });
+  ).sort((a, b) =>
+    sortBy === "title"
+      ? a.title.localeCompare(b.title)
+      : new Date(b.updatedAt) - new Date(a.updatedAt)
+  );
 
   return (
     <Container>
@@ -83,15 +79,11 @@ function NotesPage() {
 
         <Box sx={{ display: "flex", gap: 2 }}>
           <FormControl sx={{ minWidth: 200 }}>
-            <InputLabel id="filter-category-label">All Categories </InputLabel>
+            <InputLabel>All Categories</InputLabel>
             <Select
-              labelId="filter-category-label"
-              id="filter-category"
-              label="All Categories"
               value={selectedCategory}
-              onChange={(event) => {
-                setSelectedCategory(event.target.value);
-              }}
+              label="All Categories"
+              onChange={(e) => setSelectedCategory(e.target.value)}
             >
               <MenuItem value="">All Categories</MenuItem>
               {categories.map((cat) => (
@@ -103,14 +95,8 @@ function NotesPage() {
           </FormControl>
 
           <FormControl sx={{ minWidth: 200 }}>
-            <InputLabel id="sort-label">Sort By</InputLabel>
-            <Select
-              labelId="sort-label"
-              id="sort"
-              value={sortBy}
-              label="Sort By"
-              onChange={handleSortChange}
-            >
+            <InputLabel>Sort By</InputLabel>
+            <Select value={sortBy} label="Sort By" onChange={handleSortChange}>
               <MenuItem value="updatedAt">Last Updated</MenuItem>
               <MenuItem value="title">Title</MenuItem>
             </Select>
@@ -119,46 +105,43 @@ function NotesPage() {
       </Box>
 
       <Grid container spacing={3}>
-        {filteredNotes.map((note) => {
-          return (
-            <Grid item xs={12} sm={6} md={4} key={note.id}>
-              <Card sx={{ minHeight: 220 }}>
-                <CardContent>
-                  <Typography variant="h5" component="div">
-                    {note.title}
-                  </Typography>
-                  <Chip label={getCategoryLabel(note)} />
+        {filteredNotes.map((note) => (
+          <Grid item xs={12} sm={6} md={4} key={note.id}>
+            <Card sx={{ minHeight: 220 }}>
+              <CardContent>
+                <Typography variant="h5">{note.title}</Typography>
+                <Chip label={getCategoryLabel(note)} />
 
-                  <Typography variant="body2">
-                    {note.updatedAt
-                      ? new Date(note.updatedAt).toLocaleString()
-                      : "No date"}
-                  </Typography>
-                </CardContent>
-                <CardActions>
-                  <Button
-                    size="small"
-                    component={RouterLink}
-                    to={`/edit/${note.id}`}
-                  >
-                    <CreateIcon fontSize="small" sx={{ mr: 1 }} /> EDIT
-                  </Button>
-                  <Button
-                    size="small"
-                    color="error"
-                    onClick={() => handleDelete(note)}
-                  >
-                    <DeleteIcon fontSize="small" sx={{ mr: 1 }} />
-                    DELETE
-                  </Button>
-                </CardActions>
-              </Card>
-            </Grid>
-          );
-        })}
+                <Typography variant="body2">
+                  {note.updatedAt
+                    ? new Date(note.updatedAt).toLocaleString()
+                    : "No date"}
+                </Typography>
+                <Typography variant="body2">{note.content}</Typography>
+              </CardContent>
+
+              <CardActions>
+                <Button
+                  size="small"
+                  component={RouterLink}
+                  to={`/edit/${note.id}`}
+                >
+                  <CreateIcon fontSize="small" sx={{ mr: 1 }} /> EDIT
+                </Button>
+
+                <Button
+                  size="small"
+                  color="error"
+                  onClick={() => handleDelete(note)}
+                >
+                  <DeleteIcon fontSize="small" sx={{ mr: 1 }} /> DELETE
+                </Button>
+              </CardActions>
+            </Card>
+          </Grid>
+        ))}
       </Grid>
 
-      {/* Floating Add Button */}
       <IconButton
         component={RouterLink}
         to="/add"
