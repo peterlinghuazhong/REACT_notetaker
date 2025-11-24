@@ -117,7 +117,7 @@ function NotesPage() {
                     ? new Date(note.updatedAt).toLocaleString()
                     : "No date"}
                 </Typography>
-                <Typography variant="body2">{note.content}</Typography>
+                <Typography variant="inherit">{note.content}</Typography>
               </CardContent>
 
               <CardActions>

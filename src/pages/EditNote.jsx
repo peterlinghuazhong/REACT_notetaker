@@ -91,7 +91,7 @@ function EditNote() {
           <Editor
             value={content}
             onChange={(e) => setContent(e.target.value)}
-            containerProps={{ style: { height: "350px" } }}
+            containerProps={{ style: { height: "500px" } }}
           />
         </Box>
 

@@ -119,10 +119,16 @@ function CategoriesPage() {
                 divider
                 secondaryAction={
                   <Box sx={{ display: "flex", gap: "10px" }}>
-                    <IconButton onClick={() => handleUpdate(category)}>
+                    <IconButton
+                      style={{ color: "blue" }}
+                      onClick={() => handleUpdate(category)}
+                    >
                       <Edit />
                     </IconButton>
-                    <IconButton onClick={() => handleDelete(category)}>
+                    <IconButton
+                      style={{ color: "red" }}
+                      onClick={() => handleDelete(category)}
+                    >
                       <Delete />
                     </IconButton>
                   </Box>
